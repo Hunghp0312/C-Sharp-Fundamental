@@ -1,0 +1,38 @@
+
+Case choice not in menu
+8
+test
+#######################
+Case add Car
+1
+Gas
+Fuel
+Ford
+Mustang
+test
+2026
+2023
+#######################
+Case Search Car by Make success
+3
+Ford
+#######################
+Case Search Car by Make not found
+3
+Porsche
+#######################
+Case Filter Car by Type Success
+4
+Fuel
+#######################
+Case Filter Car by Type Fail
+4
+Gas
+#######################
+Case Remove Car Success
+5
+Corolla
+#######################
+Case Remove Car Not Found
+5
+VF9

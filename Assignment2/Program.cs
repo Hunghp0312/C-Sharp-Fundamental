@@ -1,64 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using Assignment2;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
-public enum CarType
-{
-    Electric,
-    Fuel
-}
-abstract class Car(string make, string model, int year, DateTime lastMaintenanceDate)
-{
-    // Thuộc tính (Properties)
-    public string? Make { get; set; } = make;
-    public string? Model { get; set; } = model;
-    public int Year { get; set; } = year;
-    public DateTime LastMaintenanceDate { get; set; } = lastMaintenanceDate;
 
-    // Phương thức (Method)
-    public abstract void DisplayInfo();
-    public DateTime ScheduleMaintenance()
-    {
-        return LastMaintenanceDate.AddMonths(6);
-    }
-}
-interface IFuelable
-{
-    public void Refuel(DateTime timeOfRefuel);
-}
-interface IChargable
-{
-    public void Charge(DateTime timeOfCharge);
-}
-class FuelCar(string make, string model, int year, DateTime lastMaintenanceDate) : Car(make, model, year, lastMaintenanceDate), IFuelable
-{
-    public void Refuel(DateTime timeOfRefuel)
-    {
-        Console.WriteLine($"FuelCar {Make} {Model} refueled on {timeOfRefuel.ToString("yyyy-MM-dd HH:mm")}");
 
-    }
-    public override void DisplayInfo()
-    {
-        Console.WriteLine($"Fuel Car: {Make} {Model}, Year: ({Year})");
-        Console.WriteLine($"Last Maintenance: {LastMaintenanceDate.ToString("dd-MM-yyyy HH:mm")}");
-        Console.WriteLine($"Next Maintenance: {this.ScheduleMaintenance().ToString("dd-MM-yyyy HH:mm")}");
-    }
-}
-class ElectricCar(string make, string model, int year, DateTime lastMaintenanceDate) : Car(make, model, year, lastMaintenanceDate), IChargable
-{
-    public void Charge(DateTime timeOfCharge)
-    {
-        Console.WriteLine($"ElectricCar {Make} {Model} charged on {timeOfCharge.ToString("yyyy-MM-dd HH:mm")}");
-    }
-    public override void DisplayInfo()
-    {
-        Console.WriteLine($"Electric Car: {Make} {Model} ({Year})");
-        Console.WriteLine($"Last Maintenance: {LastMaintenanceDate.ToString("dd-MM-yyyy")}");
-        Console.WriteLine($"Next Maintenance: {this.ScheduleMaintenance().ToString("dd-MM-yyyy")}");
-    }
-}
 // Chương trình chính
 class Program
 {
@@ -113,24 +61,14 @@ class Program
     {
         DateTime lastMaintenanceDate;
         int year;
-        // Enter car type
-        CarType carType;
-        while (true)
-        {
-            Console.Write("Enter car type (Fuel/Electric): ");
-            if (!Enum.TryParse(Console.ReadLine(), out carType))
-            {
-                Console.WriteLine($"Invalid input car type! Please enter Electric or Fuel");
-                continue;
-            }
-            break;
-        }
+        
         // Enter Make
         Console.Write("Enter Make: ");
         string make = Console.ReadLine() ?? "Unknown";
         // Enter Model
         Console.Write("Enter Model: ");
         string model = Console.ReadLine() ?? "Unknown";
+        Console.WriteLine();
         // Enter Year
         while (true)
         {
@@ -140,6 +78,7 @@ class Program
                 Console.WriteLine($"Invalid input year! Please enter a valid year between 1886 and the current year.");
                 continue;
             }
+            Console.WriteLine();
             break;
         }
         // Enter Last Maintenance Date
@@ -152,10 +91,24 @@ class Program
                 Console.WriteLine($"Invalid date format! Please enter a valid date (YYYY-MM-dd) between 1886 and now");
                 continue;
             }
+            Console.WriteLine();
+            break;
+        }
+        // Enter car type
+        char carType;
+        while (true)
+        {
+            Console.Write("Is this a FuelCar or ElectricCar? (F/E): ");
+            if (!char.TryParse(Console.ReadLine(), out carType) || (carType != 'F' && carType != 'E'))
+            {
+                Console.WriteLine($"Invalid input! Please enter \'F\' for FuelCar or \'E\' for Electric");
+                continue;
+            }
+            Console.WriteLine();
             break;
         }
         Car newCar;
-        newCar = carType == CarType.Fuel ?(FuelCar) new FuelCar(make, model, year, lastMaintenanceDate) :(ElectricCar) new ElectricCar(make, model, year, lastMaintenanceDate);
+        newCar = carType == 'F' ?(FuelCar) new FuelCar(make, model, year, lastMaintenanceDate) :(ElectricCar) new ElectricCar(make, model, year, lastMaintenanceDate);
         cars.Add(newCar);
         newCar.DisplayInfo();
         char choice;
@@ -168,6 +121,7 @@ class Program
                 Console.WriteLine("Invalid input! Please enter Y for Yes or N for No");
                 continue;
             }
+            Console.WriteLine();
             break;
         }
         if (choice == 'N')
@@ -219,39 +173,39 @@ class Program
             result[i].DisplayInfo();
         }
     }
-    static void FilterCarByType()
-    {
-        CarType carType;
-        while (true)
-        {
-            Console.Write("Enter car type to filter (Fuel/Electric): ");
-            if (!Enum.TryParse(Console.ReadLine(), out carType))
-            {
-                Console.WriteLine($"Invalid input car type! Please enter Electric or Fuel");
-                continue;
-            }
-            break;
-        }
-        List<Car> result;
-        if (carType == CarType.Fuel)
-        {
-            result = [.. cars.Where(car => car is FuelCar)];
-        }
-        else
-        {
-            result = [.. cars.Where(car => car is ElectricCar)];
-        }
-        if (result.Count == 0)
-        {
-            Console.WriteLine("No car found!");
-            return;
-        }
-        for (int i = 0; i < result.Count; i++)
-        {
-            Console.Write($"Car {i + 1}: ");
-            result[i].DisplayInfo();
-        }
-    }
+    //static void FilterCarByType()
+    //{
+    //    CarType carType;
+    //    while (true)
+    //    {
+    //        Console.Write("Enter car type to filter (Fuel/Electric): ");
+    //        if (!Enum.TryParse(Console.ReadLine(), out carType))
+    //        {
+    //            Console.WriteLine($"Invalid input car type! Please enter Electric or Fuel");
+    //            continue;
+    //        }
+    //        break;
+    //    }
+    //    List<Car> result;
+    //    if (carType == CarType.Fuel)
+    //    {
+    //        result = [.. cars.Where(car => car is FuelCar)];
+    //    }
+    //    else
+    //    {
+    //        result = [.. cars.Where(car => car is ElectricCar)];
+    //    }
+    //    if (result.Count == 0)
+    //    {
+    //        Console.WriteLine("No car found!");
+    //        return;
+    //    }
+    //    for (int i = 0; i < result.Count; i++)
+    //    {
+    //        Console.Write($"Car {i + 1}: ");
+    //        result[i].DisplayInfo();
+    //    }
+    //}
     static void RemoveCarByModel()
     {
         Console.Write("Enter model to remove: ");
