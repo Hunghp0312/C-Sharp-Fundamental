@@ -6,13 +6,20 @@ using System.Threading.Tasks;
 
 namespace Assignment2
 {
-    abstract class Car(string make, string model, int year, DateTime lastMaintenanceDate)
+    abstract class Car
     {
         // Thuộc tính (Properties)
-        public string? Make { get; set; } = make;
-        public string? Model { get; set; } = model;
-        public int Year { get; set; } = year;
-        public DateTime LastMaintenanceDate { get; set; } = lastMaintenanceDate;
+        public string? Make { get; set; }
+        public string? Model { get; set; }
+        public int Year { get; set; }
+        public DateTime LastMaintenanceDate { get; set; }
+        public Car(string make , string model , int year, DateTime lastMaintenanceDate)
+        {
+            Make = make;
+            Model = model;
+            Year = year;
+            LastMaintenanceDate = lastMaintenanceDate;
+        }
 
         // Phương thức (Method)
         public abstract void DisplayInfo();

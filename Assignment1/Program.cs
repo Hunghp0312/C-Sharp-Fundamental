@@ -79,7 +79,7 @@ class Program
             Console.Write("Enter car type (Fuel/Electric): ");
             if (!Enum.TryParse(Console.ReadLine(), out carType))
             {
-                Console.WriteLine($"Invalid input car type! Please enter Electric or Fuel");
+                Console.WriteLine($"Invalid input car type! Please enter \"Electric\" or \"Fuel\"");
                 continue;
             }
             break;
