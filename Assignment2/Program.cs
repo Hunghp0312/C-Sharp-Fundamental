@@ -1,13 +1,6 @@
 ﻿using Assignment2;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using System.Globalization;
-using System.Runtime.InteropServices;
-
-
-
-// Chương trình chính
+// Main Program
 class Program
 {
 
@@ -16,11 +9,12 @@ class Program
         AddCar();
 
     }
+    // Function to Add Car
     static void AddCar()
     {
         DateTime lastMaintenanceDate;
         int year;
-        
+
         // Enter Make
         Console.Write("Enter Make: ");
         string make = Console.ReadLine() ?? "Unknown";
@@ -45,9 +39,9 @@ class Program
         {
             Console.Write("Enter last maintenance date (YYYY-MM-dd): ");
             if (!DateTime.TryParseExact(Console.ReadLine(), "yyyy-MM-dd", CultureInfo.InvariantCulture,
-            DateTimeStyles.None, out lastMaintenanceDate) || lastMaintenanceDate.Year < 1886 || lastMaintenanceDate > DateTime.Now)
+            DateTimeStyles.None, out lastMaintenanceDate) || lastMaintenanceDate.Year < year || lastMaintenanceDate > DateTime.Now)
             {
-                Console.WriteLine($"Invalid date format! Please enter a valid date (YYYY-MM-dd) between 1886 and now");
+                Console.WriteLine($"Invalid date format! Please enter a valid date (YYYY-MM-dd) between {year} and now");
                 continue;
             }
             Console.WriteLine();
@@ -92,12 +86,13 @@ class Program
         while (true)
         {
             Console.Write("Enter refuel/charge date and time (yyyy-MM-dd HH:mm): ");
-            if (!DateTime.TryParse(Console.ReadLine(), out DateTime time) || time.Year < 1886 || time > DateTime.Now)
+            if (!DateTime.TryParseExact(Console.ReadLine(), "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture,
+                DateTimeStyles.None, out DateTime time) || time.Year < year || time > DateTime.Now)
             {
-                Console.WriteLine("Invalid date format! Please enter a valid date and time between 1886 and now");
+                Console.WriteLine($"Invalid date format! Please enter a valid date and time between {year} and now");
                 continue;
             }
-            if(newCar is FuelCar)
+            if (newCar is FuelCar)
             {
                 ((FuelCar)newCar).Refuel(time);
             }
@@ -110,5 +105,5 @@ class Program
 
 
     }
-    
+
 }

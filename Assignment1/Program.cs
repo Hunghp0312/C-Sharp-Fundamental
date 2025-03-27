@@ -1,41 +1,33 @@
-﻿using CarManagement;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Runtime.InteropServices;
-
-
-
+﻿using VehicleManagement;
 // Main program class
 class Program
 {
-    // List to store cars
-    static List<Car> cars = new List<Car>
+    // List to store vehicles
+    static List<Vehicle> vehicles = new List<Vehicle>
     {
-        new Car("Toyota", "Corolla", 2021, CarType.Fuel),
-        new Car("Tesla", "Model S", 2021, CarType.Electric),
-        new Car("Ford", "Mustang", 2021, CarType.Fuel)
+        new Car("Toyota", "Corolla", 2021, VehicleType.Fuel),
+        new Car("Tesla", "Model S", 2021, VehicleType.Electric),
+        new Car("Ford", "Mustang", 2021, VehicleType.Fuel),
+        new MotorBike("Ducati", "Panigale V4", 2021, VehicleType.Fuel)
     };
 
     // Main method
     static void Main()
     {
-       
-
-
         while (true)
         {
-           
             // Display menu options
             Console.WriteLine("Menu:");
-            Console.WriteLine("1. Add a Car");
-            Console.WriteLine("2. View All Cars");
-            Console.WriteLine("3. Search Car by Make");
-            Console.WriteLine("4. Filter Car by Type");
-            Console.WriteLine("5. Remove a Car by Model");
-            Console.WriteLine("6. Exit");
+            Console.WriteLine("1. Add a Vehicle");
+            Console.WriteLine("2. View All Vehicles");
+            Console.WriteLine("3. Search Vehicle by Make");
+            Console.WriteLine("4. Filter Vehicle by Type");
+            Console.WriteLine("5. Remove a Vehicle by Model");
+            Console.WriteLine("6. Filter By Vehicle Category");
+            Console.WriteLine("7. Exit");
             Console.Write("Enter your choice: ");
             // Try to parse the input choice
-            if (!int.TryParse(Console.ReadLine(), out int choice) || choice < 1 || choice > 6)
+            if (!int.TryParse(Console.ReadLine(), out int choice) || choice < 1 || choice > 7)
             {
                 Console.WriteLine($"Invalid input! Please enter a valid choice.");
                 continue;
@@ -44,21 +36,24 @@ class Program
             switch (choice)
             {
                 case 1:
-                    AddCar();
+                    AddVehicle();
                     break;
                 case 2:
-                    ViewAllCars();
+                    ViewAllVehicles();
                     break;
                 case 3:
-                    SearchCarByMake();
+                    SearchVehicleByMake();
                     break;
                 case 4:
-                    FilterCarByType();
+                    FilterVehicleByType();
                     break;
                 case 5:
-                    RemoveCarByModel();
+                    RemoveVehicleByModel();
                     break;
                 case 6:
+                    FilterByVehicleCategory();
+                    break;
+                case 7:
                     Console.WriteLine("Goodbye!");
                     return;
             }
@@ -69,17 +64,29 @@ class Program
     }
 
     // Method to add a new car
-    static void AddCar()
+    static void AddVehicle()
     {
-        CarType carType;
+        VehicleType vehicleType;
         int year;
+        string? vehicleCategory;
+        while (true)
+        {
+            Console.Write("Enter car type (Car/MotorBike): ");
+            vehicleCategory = Console.ReadLine();
+            if (vehicleCategory != "Car" && vehicleCategory != "MotorBike")
+            {
+                Console.WriteLine($"Invalid input car type! Please enter Car or MotorBike");
+                continue;
+            }
+            break;
+        }
         // Get car type from user
         while (true)
         {
-            Console.Write("Enter car type (Fuel/Electric): ");
-            if (!Enum.TryParse(Console.ReadLine(), out carType))
+            Console.Write("Enter car type (Fuel/Electric/Hybrid): ");
+            if (!Enum.TryParse(Console.ReadLine(), out vehicleType))
             {
-                Console.WriteLine($"Invalid input car type! Please enter \"Electric\" or \"Fuel\"");
+                Console.WriteLine($"Invalid input car type! Please enter \"Electric\" or \"Fuel\" or \"Hybrid\"");
                 continue;
             }
             break;
@@ -103,25 +110,25 @@ class Program
         }
 
         // Create a new car object and add it to the list
-        Car newCar = new Car(make, model, year, carType);
-        cars.Add(newCar);
-        Console.WriteLine("Car added successfully!");
+        Vehicle newVehicle = (vehicleCategory == "Car") ? new Car(make, model, year, vehicleType) : new MotorBike(make, model, year, vehicleType);
+        vehicles.Add(newVehicle);
+        Console.WriteLine("Vehicle added successfully!");
     }
-    // Method to view all cars
-    static void ViewAllCars()
+    // Method to view all vehicles
+    static void ViewAllVehicles()
     {
-        for (int i = 0; i < cars.Count; i++)
+        for (int i = 0; i < vehicles.Count; i++)
         {
-            Console.Write($"Car {i + 1}: ");
-            cars[i].DisplayInfo();
+            Console.Write($"Vehicle {i + 1}: ");
+            vehicles[i].DisplayInfo();
         }
     }
-    // Method to search cars by make
-    static void SearchCarByMake()
+    // Method to search vehicles by make
+    static void SearchVehicleByMake()
     {
         Console.Write("Enter make to search: ");
         string? make = Console.ReadLine();
-        List<Car> result = [.. cars.Where(car => car.Make == make)];
+        List<Vehicle> result = [.. vehicles.Where(car => car.Make == make)];
         if (result.Count == 0)
         {
             Console.WriteLine("No car found!");
@@ -129,15 +136,15 @@ class Program
         }
         for (int i = 0; i < result.Count; i++)
         {
-            Console.Write($"Car {i + 1}: ");
+            Console.Write($"Vehicle {i + 1}: ");
             result[i].DisplayInfo();
         }
     }
-    // Method to filter cars by type
-    static void FilterCarByType()
+    // Method to filter vehicles by type
+    static void FilterVehicleByType()
     {
-        // Enter Car Type
-        CarType carType;
+        // Enter Vehicle Type
+        VehicleType carType;
         while (true)
         {
             Console.Write("Enter car type to filter (Fuel/Electric): ");
@@ -148,30 +155,77 @@ class Program
             }
             break;
         }
-        // LINQ to query cars by type
-        List<Car> result = [.. cars.Where(car => car.CarType == carType)];
+        // LINQ to query vehicles by type
+        List<Vehicle> result = [.. vehicles.Where(car => car.VehicleType == carType)];
         if (result.Count == 0)
         {
-            Console.WriteLine("No car found!");
+            Console.WriteLine("No vehicle found!");
             return;
         }
         for (int i = 0; i < result.Count; i++)
         {
-            Console.Write($"Car {i + 1}: ");
+            Console.Write($"Vehicle {i + 1}: ");
             result[i].DisplayInfo();
         }
     }
     // Method to remove a car by model
-    static void RemoveCarByModel()
+    static void RemoveVehicleByModel()
     {
         Console.Write("Enter model to remove: ");
         string? model = Console.ReadLine();
-        int res = cars.RemoveAll(car => car.Model == model);
+        int res = vehicles.RemoveAll(car => car.Model == model);
         if (res == 0)
         {
-            Console.WriteLine("No car found!");
+            Console.WriteLine("No vehicle found!");
             return;
         }
-        Console.WriteLine($"Car removed successfully!");
+        Console.WriteLine($"Vehicle removed successfully!");
+    }
+
+    // Method to filter vehicles category
+    static void FilterByVehicleCategory()
+    {
+        string? vehicleCategory;
+        while (true)
+        {
+            Console.Write("Enter car type (Car/MotorBike): ");
+            vehicleCategory = Console.ReadLine();
+            if (vehicleCategory != "Car" && vehicleCategory != "MotorBike")
+            {
+                Console.WriteLine($"Invalid input car type! Please enter Car or MotorBike");
+                continue;
+            }
+            break;
+        }
+        if (vehicleCategory == "Car")
+        {
+            // LINQ to query Cars in Vehicle list
+            List<Vehicle> result = [.. vehicles.Where(vehicle => vehicle is Car)];
+            if (result.Count == 0)
+            {
+                Console.WriteLine("No car found!");
+                return;
+            }
+            for (int i = 0; i < result.Count; i++)
+            {
+                Console.Write($"Vehicle {i + 1}: ");
+                result[i].DisplayInfo();
+            }
+        }
+        else
+        {
+            // LINQ to query MotorBikes in Vehicle list
+            List<Vehicle> result = [.. vehicles.Where(vehicle => vehicle is MotorBike)];
+            if (result.Count == 0)
+            {
+                Console.WriteLine("No motorbike found!");
+                return;
+            }
+            for (int i = 0; i < result.Count; i++)
+            {
+                Console.Write($"Vehicle {i + 1}: ");
+                result[i].DisplayInfo();
+            }
+        }
     }
 }

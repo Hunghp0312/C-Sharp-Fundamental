@@ -5,6 +5,8 @@ test
 #######################
 Case add Car
 1
+Bike
+MotorBike
 Gas
 Fuel
 Ford
